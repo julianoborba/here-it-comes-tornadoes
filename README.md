@@ -5,3 +5,15 @@
 # here-it-comes-tornadoes
 
 A basic system to enqueue sensors findings and forward to some Slack channel, hopefully.
+
+### Don't mind if i put random annotations. M'kay?
+
+```
+https://github.com/localstack/localstack
+
+localstack start -d
+
+awslocal sqs create-queue --queue-name tornados
+
+awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados 
+```
