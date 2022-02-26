@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -16,11 +18,21 @@ type Response struct {
 }
 
 type Notice struct {
+	Origin  string `json:"origin"`
 	Message string `json:"message"`
 	Channel string `json:"channel"`
 }
 
+func get_queue_url_from(args []string) string {
+	if len(args) < 1 || !strings.HasPrefix("http", args[0]) {
+		return "http://localhost:4566/000000000000/notices"
+	}
+	return args[0]
+}
+
 func main() {
+
+	queue_url := get_queue_url_from(os.Args)
 
 	router := mux.NewRouter()
 
@@ -49,7 +61,7 @@ func main() {
 			Config: aws.Config{
 				Region:      aws.String("us-east-1"),
 				Credentials: credentials.AnonymousCredentials,
-				Endpoint:    aws.String("http://localhost:4566/000000000000/tornados"),
+				Endpoint:    aws.String(queue_url),
 			},
 		}))
 		svc := sqs.New(sess)
@@ -65,8 +77,8 @@ func main() {
 					StringValue: aws.String(notice.Channel),
 				},
 			},
-			MessageBody: aws.String("Notices from a screamming guy."),
-			QueueUrl:    aws.String("http://localhost:4566/000000000000/tornados"),
+			MessageBody: aws.String(notice.Origin),
+			QueueUrl:    aws.String(queue_url),
 		})
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)

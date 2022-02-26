@@ -13,8 +13,8 @@ https://github.com/localstack/localstack
 localstack start -d
 
 
-awslocal sqs create-queue --queue-name tornados
-- http://localhost:4566/000000000000/tornados
+awslocal sqs create-queue --queue-name notices
+- http://localhost:4566/000000000000/notices
 
 
 go run tornado-route.go
@@ -22,6 +22,6 @@ go run tornado-route.go
 - localhost:8080/notice
 
 
-awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados --attribute-names All --message-attribute-names All --max-number-of-messages 10
+awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/notices --attribute-names All --message-attribute-names All --max-number-of-messages 10
 
 ```
