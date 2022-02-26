@@ -41,6 +41,15 @@ func main() {
 
 	queue_url := get_queue_url_from(os.Args)
 	queue_region := get_queue_region_from(os.Args)
+	sess := session.Must(session.NewSessionWithOptions(session.Options{
+		SharedConfigState: session.SharedConfigEnable,
+		Config: aws.Config{
+			Endpoint:    aws.String(queue_url),
+			Region:      aws.String(queue_region),
+			Credentials: credentials.AnonymousCredentials,
+		},
+	}))
+	svc := sqs.New(sess)
 
 	router := mux.NewRouter()
 
@@ -64,15 +73,6 @@ func main() {
 		var notice Notice
 		dec.Decode(&notice)
 
-		sess := session.Must(session.NewSessionWithOptions(session.Options{
-			SharedConfigState: session.SharedConfigEnable,
-			Config: aws.Config{
-				Endpoint:    aws.String(queue_url),
-				Region:      aws.String(queue_region),
-				Credentials: credentials.AnonymousCredentials,
-			},
-		}))
-		svc := sqs.New(sess)
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
 			MessageAttributes: map[string]*sqs.MessageAttributeValue{
