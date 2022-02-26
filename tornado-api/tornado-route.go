@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -10,6 +11,10 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/gorilla/mux"
 )
+
+type Request struct {
+	Notices []Notice `json:"notices"`
+}
 
 type Response struct {
 	Notices []Notice `json:"notices"`
@@ -45,23 +50,27 @@ func main() {
 
 		svc := sqs.New(sess)
 
+		dec := json.NewDecoder(r.Body)
+		var notice Notice
+		dec.Decode(&notice)
+
 		_, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
 			MessageAttributes: map[string]*sqs.MessageAttributeValue{
 				"Id": {
 					DataType:    aws.String("String"),
-					StringValue: aws.String("fe4a9d69-4328-4d5a-9ea3-e940817afa3b"),
+					StringValue: aws.String(notice.Id),
 				},
 				"Message": {
 					DataType:    aws.String("String"),
-					StringValue: aws.String("Here it comes!"),
+					StringValue: aws.String(notice.Message),
 				},
 				"Channel": {
 					DataType:    aws.String("String"),
-					StringValue: aws.String("123"),
+					StringValue: aws.String(notice.Channel),
 				},
 			},
-			MessageBody: aws.String("Notices from GuardDuty"),
+			MessageBody: aws.String("Notices from a screamming guy."),
 			QueueUrl:    aws.String("http://localhost:4566/000000000000/tornados"),
 		})
 

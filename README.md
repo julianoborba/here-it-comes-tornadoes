@@ -10,10 +10,19 @@ A basic system to enqueue sensors findings and forward to some Slack channel, ho
 
 ```
 https://github.com/localstack/localstack
-
 localstack start -d
 
-awslocal sqs create-queue --queue-name tornados
 
-awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados 
+awslocal sqs create-queue --queue-name tornados
+- http://localhost:4566/000000000000/tornados
+
+
+go run tornado-route.go
+- localhost:8080/health-check
+- localhost:8080/notice
+
+
+awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados --attribute-names All
+awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados --attribute-names All --message-attribute-names All --max-number-of-messages 10
+
 ```
