@@ -30,9 +30,17 @@ func get_queue_url_from(args []string) string {
 	return args[0]
 }
 
+func get_queue_region_from(args []string) string {
+	if len(args) < 2 {
+		return "us-east-1"
+	}
+	return args[1]
+}
+
 func main() {
 
 	queue_url := get_queue_url_from(os.Args)
+	queue_region := get_queue_region_from(os.Args)
 
 	router := mux.NewRouter()
 
@@ -59,9 +67,9 @@ func main() {
 		sess := session.Must(session.NewSessionWithOptions(session.Options{
 			SharedConfigState: session.SharedConfigEnable,
 			Config: aws.Config{
-				Region:      aws.String("us-east-1"),
-				Credentials: credentials.AnonymousCredentials,
 				Endpoint:    aws.String(queue_url),
+				Region:      aws.String(queue_region),
+				Credentials: credentials.AnonymousCredentials,
 			},
 		}))
 		svc := sqs.New(sess)
