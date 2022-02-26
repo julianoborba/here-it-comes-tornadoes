@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,16 +11,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Request struct {
-	Notices []Notice `json:"notices"`
-}
-
 type Response struct {
-	Notices []Notice `json:"notices"`
+	Message string `json:"message"`
 }
 
 type Notice struct {
-	Id      string `json:"id"`
 	Message string `json:"message"`
 	Channel string `json:"channel"`
 }
@@ -33,11 +27,22 @@ func main() {
 	router.HandleFunc("/health-check", func(w http.ResponseWriter, r *http.Request) {
 
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "API is up and running")
+		w.Header().Set("Content-Type", "application/json")
+		var response Response
+		response.Message = "I am a healthy one."
+		jsonResponse, err := json.Marshal(response)
+		if err != nil {
+			return
+		}
+		w.Write(jsonResponse)
 
 	}).Methods("GET")
 
 	router.HandleFunc("/notice", func(w http.ResponseWriter, r *http.Request) {
+
+		dec := json.NewDecoder(r.Body)
+		var notice Notice
+		dec.Decode(&notice)
 
 		sess := session.Must(session.NewSessionWithOptions(session.Options{
 			SharedConfigState: session.SharedConfigEnable,
@@ -47,20 +52,10 @@ func main() {
 				Endpoint:    aws.String("http://localhost:4566/000000000000/tornados"),
 			},
 		}))
-
 		svc := sqs.New(sess)
-
-		dec := json.NewDecoder(r.Body)
-		var notice Notice
-		dec.Decode(&notice)
-
-		_, err := svc.SendMessage(&sqs.SendMessageInput{
+		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
 			MessageAttributes: map[string]*sqs.MessageAttributeValue{
-				"Id": {
-					DataType:    aws.String("String"),
-					StringValue: aws.String(notice.Id),
-				},
 				"Message": {
 					DataType:    aws.String("String"),
 					StringValue: aws.String(notice.Message),
@@ -73,15 +68,18 @@ func main() {
 			MessageBody: aws.String("Notices from a screamming guy."),
 			QueueUrl:    aws.String("http://localhost:4566/000000000000/tornados"),
 		})
-
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "Got error")
 			return
 		}
 
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, "All good")
+		jsonResponse, err := json.Marshal(result)
+		if err != nil {
+			return
+		}
+		w.Write(jsonResponse)
 
 	}).Methods("POST")
 

@@ -22,7 +22,6 @@ go run tornado-route.go
 - localhost:8080/notice
 
 
-awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados --attribute-names All
 awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/tornados --attribute-names All --message-attribute-names All --max-number-of-messages 10
 
 ```
