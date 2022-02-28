@@ -9,7 +9,5 @@ FROM gcr.io/distroless/python3 as runtime-env
 WORKDIR /app
 COPY --from=build-env /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
-
 COPY worker .
-
 CMD ["main.py"]

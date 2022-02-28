@@ -23,24 +23,26 @@ type Notice struct {
 	Channel string `json:"channel"`
 }
 
-func get_queue_url_from(args []string) string {
-	if len(args) < 1 || !strings.HasPrefix("http", args[0]) {
+func get_queue_url() string {
+	queue_url, exists := os.LookupEnv(`QUEUE_URL`)
+	if !exists || !strings.HasPrefix("http", queue_url) {
 		return "http://localhost:4566/000000000000/notices"
 	}
-	return args[0]
+	return queue_url
 }
 
-func get_queue_region_from(args []string) string {
-	if len(args) < 2 {
+func get_queue_region() string {
+	queue_region, exists := os.LookupEnv(`QUEUE_REGION`)
+	if !exists {
 		return "us-east-1"
 	}
-	return args[1]
+	return queue_region
 }
 
 func main() {
 
-	queue_url := get_queue_url_from(os.Args)
-	queue_region := get_queue_region_from(os.Args)
+	queue_url := get_queue_url()
+	queue_region := get_queue_region()
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 		Config: aws.Config{

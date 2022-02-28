@@ -17,9 +17,9 @@ awslocal sqs create-queue --queue-name notices
 - http://localhost:4566/000000000000/notices
 
 
-go run tornado-route.go
-- localhost:8080/health-check
-- localhost:8080/notice
+go run main.go
+- GET localhost:8080/health-check
+- POST localhost:8080/notice
 
 
 awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/notices --attribute-names All --message-attribute-names All --max-number-of-messages 10

@@ -37,6 +37,7 @@ def delete_received_message(receipt_handles):
 
 def parse_message(messages):
     if not messages.get('Messages'):
+        print('no messages to parse')
         return []
 
     notices = []
@@ -47,5 +48,6 @@ def parse_message(messages):
             'channel': message['MessageAttributes']['Channel']['StringValue'],
             'receipt_handle': message['ReceiptHandle']
         })
+    print(f'{len(messages["Messages"])} message(s) were parsed into {len(notices)} notice(s)')
 
     return notices
