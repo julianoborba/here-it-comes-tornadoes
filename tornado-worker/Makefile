@@ -1,4 +1,5 @@
 docker_build:
+	pipenv lock -r > requirements.txt
 	docker build -t doofi/tornado-worker:latest .
 
 install:

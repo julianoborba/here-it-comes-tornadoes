@@ -4,10 +4,12 @@ from botocore import UNSIGNED
 from botocore.config import Config
 
 QUEUE_URL = getenv('QUEUE_URL', 'http://localhost:4566/000000000000/notices')
+QUEUE_REGION = getenv('QUEUE_REGION', 'us-east-1')
 
 SQS_CLIENT = client(
     'sqs',
     config=Config(signature_version=UNSIGNED),
+    region_name=QUEUE_REGION,
     endpoint_url=QUEUE_URL
 )
 
