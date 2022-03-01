@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"strings"
@@ -75,6 +76,8 @@ func main() {
 		var notice Notice
 		dec.Decode(&notice)
 
+		fmt.Printf("\nnotice received:\n%s\n", notice.Origin)
+
 		result, err := svc.SendMessage(&sqs.SendMessageInput{
 			DelaySeconds: aws.Int64(10),
 			MessageAttributes: map[string]*sqs.MessageAttributeValue{
@@ -91,9 +94,13 @@ func main() {
 			QueueUrl:    aws.String(queue_url),
 		})
 		if err != nil {
+			fmt.Printf("\nfailed to send message to queue:\n%s\n", err.Error())
+
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
+
+		fmt.Printf("\nmessage sent to queue\n")
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
