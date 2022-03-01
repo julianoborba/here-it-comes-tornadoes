@@ -3,17 +3,23 @@ version: "3.8"
 services:
 
   localstack:
-    container_name: "localstack"
+    container_name: localstack_main
+    image: localstack/localstack:latest
+    network_mode: bridge
+    ports:
+      - "127.0.0.1:4566:4566"
+    environment:
+      - SERVICES=sqs
+      - HOST_TMP_FOLDER=${TMPDIR:-/tmp/}localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   tornado-api:
     container_name: "tornado-api"
     image: doofi/tornado-api:latest
-    network_mode: bridge
-    ports:
-      - "127.0.0.1:8080:8080"
+    network_mode: host
     environment:
       - QUEUE_URL=http://localhost:4566/000000000000/notices
       - QUEUE_REGION=us-east-1
-
-  tornado-worker:
-    image: foo/bar
