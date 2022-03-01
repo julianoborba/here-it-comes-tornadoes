@@ -6,22 +6,21 @@
 
 A basic system to enqueue sensors findings and forward to some Slack channel, hopefully.
 
-### Don't mind if i put random annotations. M'kay?
+### Usage
 
 ```
-https://github.com/localstack/localstack
-localstack start -d
+make -C tornado-api docker_build
+make -C tornado-worker docker_build
+docker-compose up
 
+export AWS_ACCESS_KEY_ID=foo
+export AWS_SECRET_ACCESS_KEY=bar
+aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name notices
 
-awslocal sqs create-queue --queue-name notices
-- http://localhost:4566/000000000000/notices
+curl --request POST \
+  --url http://localhost:8080/notice \
+  --header 'Content-Type: application/json' \
+  --data '{"origin":"Screamming guy system","message":"Here it comes!","channel": "C05002EAE"}'
 
-
-go run main.go
-- GET localhost:8080/health-check
-- POST localhost:8080/notice
-
-
-awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/notices --attribute-names All --message-attribute-names All --max-number-of-messages 10
-
+docker run -i --net=host --rm "doofi/tornado-worker:latest"
 ```
