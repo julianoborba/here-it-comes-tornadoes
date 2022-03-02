@@ -1,14 +1,11 @@
 from os import getenv
 from boto3 import client
-from botocore import UNSIGNED
-from botocore.config import Config
 
-QUEUE_URL = getenv('QUEUE_URL', 'http://localhost:4566/000000000000/notices')
-QUEUE_REGION = getenv('QUEUE_REGION', 'us-east-1')
+QUEUE_URL = getenv('QUEUE_URL')
+QUEUE_REGION = getenv('QUEUE_REGION')
 
 SQS_CLIENT = client(
     'sqs',
-    config=Config(signature_version=UNSIGNED),
     region_name=QUEUE_REGION,
     endpoint_url=QUEUE_URL
 )
@@ -50,6 +47,9 @@ def parse_message(messages):
             'channel': message['MessageAttributes']['Channel']['StringValue'],
             'receipt_handle': message['ReceiptHandle']
         })
-    print(f'{len(messages["Messages"])} message(s) were parsed into {len(notices)} notice(s)')
+    print(
+        f'{len(messages["Messages"])} message(s) were '
+        f'parsed into {len(notices)} notice(s)'
+    )
 
     return notices

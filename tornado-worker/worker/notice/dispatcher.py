@@ -2,10 +2,7 @@ from worker.sqs import consumer
 from os import getenv
 from requests import post
 
-SLACK_WEBHOOK_URL = getenv(
-    'SLACK_WEBHOOK_URL',
-    'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX'
-)
+SLACK_WEBHOOK_URL = getenv('SLACK_WEBHOOK_URL')
 
 
 def build_slack_notice(notice):
@@ -38,4 +35,7 @@ def dispatch(notices):
 
         counter += 1
 
-    print(f'{counter} notices were dispatched out of {len(notices)} notices in total')
+    print(
+        f'{counter} notices were dispatched '
+        f'out of {len(notices)} notices in total'
+    )

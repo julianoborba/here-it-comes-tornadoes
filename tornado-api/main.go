@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/gorilla/mux"
@@ -25,18 +23,12 @@ type Notice struct {
 }
 
 func get_queue_url() string {
-	queue_url, exists := os.LookupEnv(`QUEUE_URL`)
-	if !exists || !strings.HasPrefix("http", queue_url) {
-		return "http://localhost:4566/000000000000/notices"
-	}
+	queue_url, _ := os.LookupEnv(`QUEUE_URL`)
 	return queue_url
 }
 
 func get_queue_region() string {
-	queue_region, exists := os.LookupEnv(`QUEUE_REGION`)
-	if !exists {
-		return "us-east-1"
-	}
+	queue_region, _ := os.LookupEnv(`QUEUE_REGION`)
 	return queue_region
 }
 
@@ -45,11 +37,9 @@ func main() {
 	queue_url := get_queue_url()
 	queue_region := get_queue_region()
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
-		SharedConfigState: session.SharedConfigEnable,
 		Config: aws.Config{
-			Endpoint:    aws.String(queue_url),
-			Region:      aws.String(queue_region),
-			Credentials: credentials.AnonymousCredentials,
+			Endpoint: aws.String(queue_url),
+			Region:   aws.String(queue_region),
 		},
 	}))
 	svc := sqs.New(sess)

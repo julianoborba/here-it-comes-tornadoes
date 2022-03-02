@@ -34,5 +34,5 @@ curl --request POST \
 
 Consume the queue and dispatch to Slack through worker container
 ```
-docker run -i --net=host --rm "doofi/tornado-worker:latest"
+docker run -i --env-file ./tornado-worker/.env --net=host --rm "doofi/tornado-worker:latest"
 ```
