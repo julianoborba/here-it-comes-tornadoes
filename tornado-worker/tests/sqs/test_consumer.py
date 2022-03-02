@@ -11,7 +11,7 @@ class ConsumerTest(TestCase):
                     'MessageId': '77062e28-40e8-502f-9427-fb7f3abfddcc',
                     'ReceiptHandle': 'avptgxktxigerbawfbjlkiaenwzgignqdfj...',
                     'MD5OfBody': 'f27eca4f499f59e0328f3f4ae35a4a1b',
-                    'Body': 'Screamming guy system',
+                    'Body': 'Screamming guy system detect a tornado',
                     'Attributes': {
                         'SenderId': 'AIDAIT2UOQQY3AUEKVGXU',
                         'SentTimestamp': '1645902870467',
@@ -24,7 +24,7 @@ class ConsumerTest(TestCase):
                             'StringValue': 'FOOBAR123',
                             'DataType': 'String'
                         },
-                        'Message': {
+                        'Finding': {
                             'StringValue': 'Here it comes!',
                             'DataType': 'String'
                         }
@@ -34,7 +34,7 @@ class ConsumerTest(TestCase):
                     'MessageId': '77062e28-40e8-502f-9427-fb7f3abfddcc',
                     'ReceiptHandle': 'avptgxktxigerbawfbjlkiaenwzgignqdfj...',
                     'MD5OfBody': 'f27eca4f499f59e0328f3f4ae35a4a1b',
-                    'Body': 'Screamming guy system',
+                    'Body': 'Screamming guy system detect a tornado',
                     'Attributes': {
                         'SenderId': 'AIDAIT2UOQQY3AUEKVGXU',
                         'SentTimestamp': '1645902870467',
@@ -47,7 +47,7 @@ class ConsumerTest(TestCase):
                             'StringValue': 'FOOBAR123',
                             'DataType': 'String'
                         },
-                        'Message': {
+                        'Finding': {
                             'StringValue': 'Here it comes!',
                             'DataType': 'String'
                         }
@@ -57,14 +57,14 @@ class ConsumerTest(TestCase):
         }
         expected_notices = [
             {
-                'subject': 'Screamming guy system',
-                'message': 'Here it comes!',
+                'subject': 'Screamming guy system detect a tornado',
+                'finding': 'Here it comes!',
                 'channel': 'FOOBAR123',
                 'receipt_handle': 'avptgxktxigerbawfbjlkiaenwzgignqdfj...',
             },
             {
-                'subject': 'Screamming guy system',
-                'message': 'Here it comes!',
+                'subject': 'Screamming guy system detect a tornado',
+                'finding': 'Here it comes!',
                 'channel': 'FOOBAR123',
                 'receipt_handle': 'avptgxktxigerbawfbjlkiaenwzgignqdfj...',
             }

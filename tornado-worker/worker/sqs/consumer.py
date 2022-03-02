@@ -43,7 +43,7 @@ def parse_message(messages):
     for message in messages['Messages']:
         notices.append({
             'subject': message['Body'],
-            'message': message['MessageAttributes']['Message']['StringValue'],
+            'finding': message['MessageAttributes']['Finding']['StringValue'],
             'channel': message['MessageAttributes']['Channel']['StringValue'],
             'receipt_handle': message['ReceiptHandle']
         })

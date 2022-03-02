@@ -12,7 +12,7 @@ def build_slack_notice(notice):
         'text': notice['subject'],
         'attachments': [
             {
-                'text': notice['message'],
+                'text': notice['finding'],
                 'attachment_type': 'default',
                 'color': '#ad1721',
             }
