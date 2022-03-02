@@ -38,7 +38,7 @@ curl --request POST \
   --data '{"origin":"Screamming guy system","message":"Here it comes!","channel": "C05002EAE"}'
 ```
 
-- Consume the queue and dispatch to Slack through worker container
+- Consume the queue and dispatch to Slack through consumer container
 ```
 docker run -i --env-file ./tornado-worker/.env --net=host --rm "doofi/tornado-worker:latest"
 ```
