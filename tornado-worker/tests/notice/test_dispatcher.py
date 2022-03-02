@@ -4,7 +4,7 @@ from worker.notice import dispatcher
 
 class DispatcherTest(TestCase):
 
-    def test_should_dispatch_a_notice(self):
+    def test_should_build_slack_notice(self):
         notice = {
             'subject': 'Screamming guy system',
             'message': 'Here it comes!',
