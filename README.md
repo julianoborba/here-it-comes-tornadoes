@@ -42,3 +42,12 @@ curl --request POST \
 ```
 docker run -i --env-file ./tornado-worker/.env --net=host --rm "doofi/tornado-worker:latest"
 ```
+
+### Producer API
+
+TODO
+
+### Architecture diagram
+
+TODO
+
