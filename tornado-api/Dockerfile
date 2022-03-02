@@ -1,10 +1,9 @@
 FROM golang:1.17 as build-env
 WORKDIR /go/src/app
-COPY *.go .
-RUN go mod init
-RUN go get -d -v ./...
-RUN go vet -v
-RUN go test -v
+COPY main.go .
+COPY go.sum ./
+COPY go.mod ./
+COPY docs/ ./docs/
 RUN CGO_ENABLED=0 go build -o /go/bin/app
 
 FROM gcr.io/distroless/static
