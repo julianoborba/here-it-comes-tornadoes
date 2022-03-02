@@ -1,0 +1,123 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API to enqueue findings with AWS SQS",
+        "title": "Tornado API",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "Returns HTTP 200 upon and only upon a successfully completed request",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Returns a indicator of health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/notices": {
+            "post": {
+                "description": "Parses JSON request body into a notice to be enqueued at AWS SQS for future consumption",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "notices"
+                ],
+                "summary": "Enqueues a new finding notice",
+                "parameters": [
+                    {
+                        "description": "Notice to enqueue",
+                        "name": "notice",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Notice"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.EnqueuedMessage"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.EnqueuedMessage": {
+            "type": "object",
+            "properties": {
+                "attributes_md5": {
+                    "type": "string",
+                    "example": "e64461b4cb51a781f7d35414369a7bfc"
+                },
+                "body_md5": {
+                    "type": "string",
+                    "example": "f27eca4f499f59e0328f3f4ae35a4a1b"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "69069c03-8720-e75a-f386-3ca5b3d56801"
+                },
+                "sequence": {
+                    "type": "string",
+                    "example": "null"
+                },
+                "system_attributes_md5": {
+                    "type": "string",
+                    "example": "null"
+                }
+            }
+        },
+        "main.Notice": {
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "type": "string",
+                    "example": "C05002EAE"
+                },
+                "finding": {
+                    "type": "string",
+                    "example": "ThreatPurpose:ResourceTypeAffected/ThreatFamilyName.DetectionMechanism!Artifact"
+                },
+                "subject": {
+                    "type": "string",
+                    "example": "An EC2 instance is behaving in a manner indicating it is being used to perform a Denial of Service (DoS) attack using the TCP protocol."
+                }
+            }
+        },
+        "main.Response": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "My generic user friendly message about response from some request"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,85 @@
+basePath: /
+definitions:
+  main.EnqueuedMessage:
+    properties:
+      attributes_md5:
+        example: e64461b4cb51a781f7d35414369a7bfc
+        type: string
+      body_md5:
+        example: f27eca4f499f59e0328f3f4ae35a4a1b
+        type: string
+      id:
+        example: 69069c03-8720-e75a-f386-3ca5b3d56801
+        type: string
+      sequence:
+        example: "null"
+        type: string
+      system_attributes_md5:
+        example: "null"
+        type: string
+    type: object
+  main.Notice:
+    properties:
+      channel:
+        example: C05002EAE
+        type: string
+      finding:
+        example: ThreatPurpose:ResourceTypeAffected/ThreatFamilyName.DetectionMechanism!Artifact
+        type: string
+      subject:
+        example: An EC2 instance is behaving in a manner indicating it is being used
+          to perform a Denial of Service (DoS) attack using the TCP protocol.
+        type: string
+    type: object
+  main.Response:
+    properties:
+      message:
+        example: My generic user friendly message about response from some request
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API to enqueue findings with AWS SQS
+  title: Tornado API
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: Returns HTTP 200 upon and only upon a successfully completed request
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Response'
+      summary: Returns a indicator of health
+      tags:
+      - health
+  /notices:
+    post:
+      consumes:
+      - application/json
+      description: Parses JSON request body into a notice to be enqueued at AWS SQS
+        for future consumption
+      parameters:
+      - description: Notice to enqueue
+        in: body
+        name: notice
+        required: true
+        schema:
+          $ref: '#/definitions/main.Notice'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.EnqueuedMessage'
+      summary: Enqueues a new finding notice
+      tags:
+      - notices
+swagger: "2.0"
