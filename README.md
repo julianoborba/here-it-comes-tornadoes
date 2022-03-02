@@ -4,7 +4,7 @@
 
 # here-it-comes-tornadoes
 
-A basic system to enqueue sensors findings and forward to some Slack channel, hopefully.
+A basic system to enqueue sensors findings and forward enqueued notices to some Slack channel, hopefully.
 
 ### Local usage
 
@@ -32,10 +32,15 @@ aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name notices
 
 - Now you can submit a dummy notice through producer container
 ```
-curl --request POST \
-  --url http://localhost:8080/notice \
-  --header 'Content-Type: application/json' \
-  --data '{"origin":"Screamming guy system","message":"Here it comes!","channel": "C05002EAE"}'
+curl -X 'POST' \
+  'http://localhost:8080/notices' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "channel": "FOOBAR123",
+  "finding": "Here it comes!",
+  "subject": "Screamming guy system detect a tornado!"
+}'
 ```
 
 - Consume the queue and dispatch to Slack through consumer container
@@ -45,9 +50,8 @@ docker run -i --env-file ./tornado-worker/.env --net=host --rm "doofi/tornado-wo
 
 ### Producer API
 
-TODO
+See Swagger API docs at http://localhost:8080/swagger/.
 
 ### Architecture diagram
 
 TODO
-
