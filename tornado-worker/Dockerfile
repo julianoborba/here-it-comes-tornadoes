@@ -1,15 +1,12 @@
 FROM python:3.9-slim AS build-env
 WORKDIR /app
+COPY requirements.txt .
+RUN pip3 install -r requirements.txt
+COPY worker/ worker/
+COPY setup.py .
+RUN pip3 install .
 
-RUN adduser worker
-USER worker
-WORKDIR /home/worker
-
-COPY --chown=worker:worker requirements.txt .
-RUN pip3 install --user -r requirements.txt
-
-COPY --chown=worker:worker worker/ worker/
-COPY --chown=worker:worker setup.py .
-RUN pip3 install --user .
-
-CMD [ "python", "-m", "worker.main" ]
+FROM gcr.io/distroless/python3 AS runtime-env
+COPY --from=build-env /usr/local/lib/python3.9/site-packages /app
+WORKDIR /app
+CMD [ "-m", "worker.main" ]
