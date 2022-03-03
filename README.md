@@ -12,7 +12,7 @@ From within this repository:
 
 - Customize docker-compose.yml with proper environment variables
 
-- Customize tornado-worker with proper environment variables
+- Customize tornado-worker/.env with proper environment variables
 
 - Build images for API and Worker aplications
 ```
