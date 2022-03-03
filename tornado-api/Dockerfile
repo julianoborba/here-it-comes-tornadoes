@@ -6,6 +6,6 @@ COPY go.mod ./
 COPY docs/ ./docs/
 RUN CGO_ENABLED=0 go build -o /go/bin/app
 
-FROM gcr.io/distroless/static
+FROM gcr.io/distroless/static AS runtime-env
 COPY --from=build-env /go/bin/app /
 CMD ["/app"]
