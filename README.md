@@ -54,4 +54,4 @@ See Swagger API docs at http://localhost:8080/swagger/.
 
 ### Architecture diagram
 
-TODO
+![here-it-comes-tornadoes](https://user-images.githubusercontent.com/6361839/156521395-1c7088c8-4edb-44f0-9217-663191063a1b.png)
